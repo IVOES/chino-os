@@ -46,7 +46,7 @@ namespace Chino
 			void Take();
 			void Give();
 		private:
-			std::atomic<bool> avail_;
+			std::atomic<size_t> avail_;
 		};
 
 		class RecursiveMutex : public Waitable
@@ -57,7 +57,7 @@ namespace Chino
 			size_t Take();
 			size_t Give();
 		private:
-			std::atomic<bool> avail_;
+			std::atomic<size_t> avail_;
 			std::atomic<Thread*> thread_;
 			std::atomic<size_t> depth_;
 		};
@@ -72,7 +72,7 @@ namespace Chino
 			void Reset();
 		private:
 			const bool autoReset_;
-			std::atomic<bool> signaled_;
+			std::atomic<size_t> signaled_;
 		};
 
 		template<class T>

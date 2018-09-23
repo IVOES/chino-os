@@ -37,7 +37,6 @@ extern "C" void Kernel_Main(const BootParameters* pParams)
 
 	g_Logger->PutString(L"Loading Chino ♥ ...\n");
 	atexit(__libc_fini_array);
-	g_Logger->PutChar('A');
 	__libc_init_array();
 	g_Logger->PutChar('B');
 

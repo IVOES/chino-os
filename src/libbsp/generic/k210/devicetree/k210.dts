@@ -1,0 +1,17 @@
+/dts-v1/;
+
+/ {
+    model = "canaan,k210";
+    compatible = "riscv64,rv64imafdc";
+
+    cpus {
+	    CPU0: cpu@0 {
+	        device_type = "cpu";
+	    };
+	};
+	
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+	};
+};

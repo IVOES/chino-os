@@ -32,15 +32,14 @@ bool Object::Release() noexcept
 }
 
 ExclusiveObjectAccess::ExclusiveObjectAccess()
-	:used_(false)
+	:used_(ATOMIC_FLAG_INIT)
 {
 
 }
 
 void ExclusiveObjectAccess::Open(ObjectAccessContext& context)
 {
-	bool exp = false;
-	kassert(used_.compare_exchange_strong(exp, true, std::memory_order_relaxed));
+	kassert(used_.test_and_set(std::memory_order_relaxed));
 	context.AccessToken = context.AccessAcquired;
 	OnFirstOpen();
 }
@@ -48,7 +47,7 @@ void ExclusiveObjectAccess::Open(ObjectAccessContext& context)
 void ExclusiveObjectAccess::Close(ObjectAccessContext& context)
 {
 	OnLastClose();
-	used_.store(false, std::memory_order_relaxed);
+	used_.clear(std::memory_order_relaxed);
 	context.AccessToken = OA_None;
 }
 

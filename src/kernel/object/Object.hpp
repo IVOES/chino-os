@@ -54,7 +54,7 @@ namespace Chino
 		virtual void OnFirstOpen();
 		virtual void OnLastClose();
 	private:
-		std::atomic<bool> used_;
+		std::atomic_flag used_;
 	};
 
 	class FreeObjectAccess: public virtual IObjectAccess
