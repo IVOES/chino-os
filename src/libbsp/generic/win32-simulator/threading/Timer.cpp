@@ -13,8 +13,20 @@ using namespace Chino::Threading;
 
 #define configTICK_RATE_HZ 10
 
+enum
+{
+	S = sizeof(CONTEXT)
+};
+
+static_assert(sizeof(ThreadContext_Arch::context) == sizeof(CONTEXT), "context size error.");
+
 static std::atomic<bool> _switchQueued = false;
 static HANDLE _timerThread, _timer, _workerThread, _wfiEvent;
+
+static CONTEXT& GetContext(ThreadContext_Arch* ctx)
+{
+	return reinterpret_cast<CONTEXT&>(ctx->context);
+}
 
 static void ArchQueueContextSwitch();
 
@@ -78,7 +90,7 @@ static void ArchSwitchContext(ULONG_PTR)
 {
 	std::lock_guard<std::mutex> locker(mutex);
 	CONTEXT hostCtx = { 0 };
-	hostCtx.ContextFlags = CONTEXT_INTEGER | CONTEXT_CONTROL;
+	hostCtx.ContextFlags = CONTEXT_ALL;
 
 	{
 		_exitKernel.store(false, std::memory_order_release);
@@ -97,50 +109,12 @@ static void ArchSwitchContext(ULONG_PTR)
 
 		// Save
 		if (ctx)
-		{
-			ctx->rax = hostCtx.Rax;
-			ctx->rbx = hostCtx.Rbx;
-			ctx->rcx = hostCtx.Rcx;
-			ctx->rdx = hostCtx.Rdx;
-			ctx->rbp = hostCtx.Rbp;
-			ctx->rdi = hostCtx.Rdi;
-			ctx->rsi = hostCtx.Rsi;
-			ctx->r8 = hostCtx.R8;
-			ctx->r9 = hostCtx.R9;
-			ctx->r10 = hostCtx.R10;
-			ctx->r11 = hostCtx.R11;
-			ctx->r12 = hostCtx.R12;
-			ctx->r13 = hostCtx.R13;
-			ctx->r14 = hostCtx.R14;
-			ctx->r15 = hostCtx.R15;
-
-			ctx->rip = hostCtx.Rip;
-			ctx->eflags = hostCtx.EFlags;
-			ctx->rsp = hostCtx.Rsp;
-		}
+			GetContext(ctx) = hostCtx;
 
 		// Restore
 		Kernel_SwitchThreadContext();
 		ctx = reinterpret_cast<ThreadContext_Arch*>(g_CurrentThreadContext);
-		hostCtx.Rax = ctx->rax;
-		hostCtx.Rbx = ctx->rbx;
-		hostCtx.Rcx = ctx->rcx;
-		hostCtx.Rdx = ctx->rdx;
-		hostCtx.Rbp = ctx->rbp;
-		hostCtx.Rdi = ctx->rdi;
-		hostCtx.Rsi = ctx->rsi;
-		hostCtx.R8 = ctx->r8;
-		hostCtx.R9 = ctx->r9;
-		hostCtx.R10 = ctx->r10;
-		hostCtx.R11 = ctx->r11;
-		hostCtx.R12 = ctx->r12;
-		hostCtx.R13 = ctx->r13;
-		hostCtx.R14 = ctx->r14;
-		hostCtx.R15 = ctx->r15;
-
-		hostCtx.Rip = ctx->rip;
-		hostCtx.EFlags = ctx->eflags;
-		hostCtx.Rsp = ctx->rsp;
+		hostCtx = GetContext(ctx);
 
 		SetThreadContext(_workerThread, &hostCtx);
 		_switchQueued.store(false, std::memory_order_release);
@@ -166,19 +140,20 @@ extern "C"
 	void ArchInitializeThreadContextArch(ThreadContext_Arch* context, uintptr_t stackPointer, uintptr_t entryPoint, uintptr_t returnAddress, uintptr_t parameter)
 	{
 		auto stack = reinterpret_cast<uint64_t*>(stackPointer);
-
-		context->rcx = parameter;
-		context->eflags = portINITIAL_RFLAGS;
-		context->rip = entryPoint;
+		auto& ctx = GetContext(context);
+		ctx.Rcx = parameter;
+		ctx.EFlags = 0;
+		ctx.Rip = entryPoint;
 
 		--stack;
 		*--stack = returnAddress;
-		context->rsp = uintptr_t(stack);
+		ctx.Rsp = uintptr_t(stack);
 	}
 
 	bool ArchValidateThreadContext(ThreadContext_Arch* context, uintptr_t stackTop, uintptr_t stackBottom)
 	{
-		return context->rsp <= stackTop && context->rsp >= stackBottom;
+		auto& ctx = GetContext(context);
+		return ctx.Rsp <= stackTop && ctx.Rsp >= stackBottom;
 	}
 
 	void ArchDisableInterrupt()
