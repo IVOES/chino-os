@@ -114,7 +114,17 @@ static void ArchSwitchContext(ULONG_PTR)
 		// Restore
 		Kernel_SwitchThreadContext();
 		ctx = reinterpret_cast<ThreadContext_Arch*>(g_CurrentThreadContext);
-		hostCtx = GetContext(ctx);
+		auto& newCtx = GetContext(ctx);
+		if (newCtx.ContextFlags == 0)
+		{
+			hostCtx.Rcx = newCtx.Rcx;
+			hostCtx.Rip = newCtx.Rip;
+			hostCtx.Rsp = newCtx.Rsp;
+		}
+		else
+		{
+			hostCtx = GetContext(ctx);
+		}
 
 		SetThreadContext(_workerThread, &hostCtx);
 		_switchQueued.store(false, std::memory_order_release);
@@ -142,7 +152,6 @@ extern "C"
 		auto stack = reinterpret_cast<uint64_t*>(stackPointer);
 		auto& ctx = GetContext(context);
 		ctx.Rcx = parameter;
-		ctx.EFlags = 0;
 		ctx.Rip = entryPoint;
 
 		--stack;
