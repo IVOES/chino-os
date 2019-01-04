@@ -68,6 +68,8 @@ extern "C" void ArchSwitchContextCore();
 
 static std::mutex mutex;
 
+enum{s = sizeof(ThreadContext_Arch) };
+
 static void ArchSwitchContext(ULONG_PTR)
 {
 	std::lock_guard<std::mutex> locker(mutex);
