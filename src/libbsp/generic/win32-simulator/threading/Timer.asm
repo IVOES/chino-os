@@ -53,13 +53,8 @@ _save:
 	pop rbx ; rip
 	mov [rax + 8 * 15], rbx
 
-	push fs
-	pop bx
-	mov [rax + 8 * 50], bx
-
-	push gs
-	pop bx
-	mov [rax + 8 * 50 + 2], bx
+	mov [rax + 8 * 50], fs
+	mov [rax + 8 * 50 + 2], gs
 
 	mov [rax + 8 * 48], rsp
 	jmp _restore_2
@@ -111,13 +106,8 @@ _restore_2:
 	push rbx
 	popfq
 
-	mov bx, [rax + 8 * 50] ; fs
-	push bx
-	pop fs
-
-	mov bx, [rax + 8 * 50 + 2] ; gs
-	push bx
-	pop gs
+	mov fs, [rax + 8 * 50]
+	mov gs, [rax + 8 * 50 + 2]
 _restore_end:
     mov rbx, [rax + 8 * 1]
 	mov rax, [rax]
