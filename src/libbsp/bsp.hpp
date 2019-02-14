@@ -3,7 +3,6 @@
 //
 #pragma once
 #include <kernel/kernel_iface.h>
-#include <kernel/device/Driver.hpp>
 #include <memory>
 
 namespace Chino
@@ -17,14 +16,6 @@ namespace Chino
 		};
 
 		bool BSPEnumHeapRegion(const BootParameters& bootParams, size_t index, HeapRegionDesc& desc);
-	}
-
-	namespace Device
-	{
-		class SdioController;
-
-		ObjectPtr<Driver> BSPInstallRootDriver(const BootParameters& bootParams);
-		ObjectPtr<Driver> BSPInstallSdioRootDriver(ObjectPtr<SdioController> sdio);
 	}
 
 	namespace Diagnostic

@@ -5,7 +5,6 @@
 #include <libbsp/generic/pc/bsp_defines.hpp>
 #include <efi.h>
 #include <efilib.h>
-#include <acpi/Acpi2_0.h>
 #include <elfload/elfload.h>
 
 static CHAR16 KernelFilePath[] = L"CHINO\\SYSTEM\\KERNEL";
@@ -187,5 +186,5 @@ void SetACPIBase(struct BootParameters* bootParam)
 {
 	EFI_CONFIGURATION_TABLE* efiRdsp;
 	ExitIfError(SearchEfiConfigurationTable(&gEfiAcpiTableGuid, &efiRdsp));
-	bootParam->Acpi.Rsdp = efiRdsp->VendorTable;
+	bootParam->Acpi.Rsdp = (uintptr_t)efiRdsp->VendorTable;
 }

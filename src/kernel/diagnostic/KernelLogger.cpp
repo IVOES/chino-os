@@ -79,7 +79,7 @@ size_t _itow(uint64_t i, unsigned base, wchar_t* buf) {
 size_t _itow_s(int64_t i, unsigned base, wchar_t* buf) 
 {
 	size_t add = 0;
-	kassert(base <= 16);
+	assert(base <= 16);
 	if (i < 0) {
 		*buf++ = '-';
 		i = -i;

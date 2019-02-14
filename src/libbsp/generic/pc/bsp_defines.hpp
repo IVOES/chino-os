@@ -8,7 +8,6 @@ extern "C"
 
 #include <efi.h>
 #include <efiapi.h>
-#include <acpi/Acpi2_0.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -41,7 +40,7 @@ struct BootParameters
 
 	struct
 	{
-		EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER* Rsdp;
+		uintptr_t Rsdp;
 	} Acpi;
 };
 

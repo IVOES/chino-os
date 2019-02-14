@@ -1,7 +1,7 @@
 #!/bin/bash
 ARCH=$1
 BOARD=$2
-TOOLCHAIN=/opt/chino
+TOOLCHAIN=/opt/chino-toolchain
 
 case $ARCH in
 x86_64)
