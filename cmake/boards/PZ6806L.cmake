@@ -1,5 +1,6 @@
 include(${CHINO_ROOT}/src/hal/src/arch/arm/armv7-m/arch.cmake)
 set(CHINO_CHIP st/stm32f1xx_hd)
+set(CHINO_BOARD_ID "DB4A97D2-1CEB-4C6A-AED4-6861C1F990A1")
 
 set(CHINO_PAGE_SIZE "512")
 set(CHINO_KERNEL_STACK_SIZE "2048")

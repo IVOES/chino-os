@@ -43,6 +43,8 @@ extern "C"
 {
     extern const ::chino::io::driver *drivers_begin_[];
     extern const ::chino::io::driver *drivers_end_[];
+    extern const ::chino::io::hardware_device_registration *hdrs_begin_[];
+    extern const ::chino::io::hardware_device_registration *hdrs_end_[];
 }
 #else
 #error "Unsupported compiler"

@@ -61,6 +61,14 @@ SECTIONS
     } > FLASH
     drivers_end_ = .;
 
+    /* Hardware Regs */
+    hdrs_begin_ = .;
+    .chino.hdr :
+    {
+      KEEP (*(.chhdr .chhdr.*))
+    } > FLASH
+    hdrs_end_ = .;
+
 	.ARM.extab : /* exception unwinding information */
     {
         *(.ARM.extab*)

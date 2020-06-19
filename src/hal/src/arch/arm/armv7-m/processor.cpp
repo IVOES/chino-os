@@ -33,9 +33,9 @@ using namespace chino::kernel;
 
 extern "C"
 {
-    extern  void arm_start_schedule(thread_context_t *ctx);
-    extern  void arm_yield(thread_context_t *old_ctx, thread_context_t *new_ctx);
-    extern  void arm_thread_thunk();
+    [[noreturn]] extern void arm_start_schedule(thread_context_t *ctx);
+    extern void arm_yield(thread_context_t *old_ctx, thread_context_t *new_ctx);
+    extern void arm_thread_thunk();
 }
 
 namespace

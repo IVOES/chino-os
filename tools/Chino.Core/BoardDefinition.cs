@@ -10,9 +10,9 @@ namespace Chino
 
         public Guid Chip { get; set; }
 
-        public Dictionary<string, string> SelectedPinGroups { get; set; }
+        public Dictionary<string, string> SelectedPinGroups { get; set; } = new Dictionary<string, string>();
 
-        public IReadOnlyList<Guid> Drivers { get; set; }
+        public IReadOnlyList<Guid> Drivers { get; set; } = Array.Empty<Guid>();
     }
 
     public interface IBoardDefinitionProvider
