@@ -8,3 +8,4 @@ winpcap/4.1.3@sunnycase/testing
 [options]
 
 [imports]
+bin, *.dll -> ./bin # Copies all dll files from packages bin folder to my "bin" folder

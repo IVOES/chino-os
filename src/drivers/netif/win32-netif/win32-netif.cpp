@@ -38,7 +38,7 @@ class win32_netif_dev : public device_extension
 {
 public:
     win32_netif_dev(pcap_if_t *pcap_if)
-        : pcap_if_(pcap_if) {}
+        : pcap_if_(pcap_if) { }
 
     result<file *, error_code> open(std::string_view filename, create_disposition create_disp) noexcept
     {
@@ -76,7 +76,7 @@ result<void, error_code> netif_add_device(const driver &drv, const hardware_devi
     pcap_if_t *alldevs;
     char errbuf[PCAP_ERRBUF_SIZE];
 
-    if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, nullptr, &alldevs, errbuf) != 0)
+    if (pcap_findalldevs_ex((char *)PCAP_SRC_IF_STRING, nullptr, &alldevs, errbuf) != 0)
         return err(error_code::unknown);
 
     auto pcap_dev = alldevs;

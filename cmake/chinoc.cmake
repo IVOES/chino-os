@@ -3,7 +3,7 @@ set(CHINOC_PROJ "${TOOLS_DIR}/chinoc")
 find_package(Dotnet REQUIRED)
 
 BUILD_DOTNET_IMM(${CHINOC_PROJ} NETCOREAPP RELEASE)
-set(CHINOC_EXEC ${CMAKE_BINARY_DIR}/chinoc/netcoreapp3.1/chinoc)
+set(CHINOC_EXEC ${CMAKE_BINARY_DIR}/chinoc/net6.0/chinoc)
 
 function(CHINOC_RENDER Name OUTPUT TEMPLATE)
     message("OUTPUT ${OUTPUT}")

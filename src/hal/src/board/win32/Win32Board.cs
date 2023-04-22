@@ -22,7 +22,7 @@ namespace Chino.Board
                 {
                     Driver.Win32ConsoleDriver.Win32Console,
                     Driver.Win32FSDriver.Win32FS,
-                    Driver.Win32NetIfDriver.Win32NetIf
+                    //Driver.Win32NetIfDriver.Win32NetIf
                 }
             });
         }
